@@ -2,6 +2,8 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 import { createClient } from '@supabase/supabase-js' 
 import { NextResponse } from 'next/server'
 
+export const runtime = 'edge';
+
 export async function GET(req: Request) {
   try {
     // 1. Validasi Keamanan: Cek Header Authorization

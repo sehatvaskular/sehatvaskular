@@ -1,6 +1,8 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { NextResponse } from 'next/server'
 
+export const runtime = 'edge';
+
 // Definisikan struktur data history agar TypeScript tidak error
 interface ChatMessage {
   role: string;

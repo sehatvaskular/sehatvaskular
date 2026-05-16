@@ -8,6 +8,8 @@ import Link from 'next/link'
 import { use } from 'react' // Import hook 'use' dari React Next.js 15+
 import Swal from 'sweetalert2'
 
+export const runtime = 'edge';
+
 export default function EditDokter({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params) // Meng-unwrap Promise params
   const id = resolvedParams.id

@@ -1,6 +1,8 @@
 import { supabase } from '@/lib/supabase'
 import { FileText, Users, Handshake, Eye } from 'lucide-react'
 
+export const runtime = 'edge';
+
 export const revalidate = 0 // Jangan di-cache agar admin selalu melihat data terbaru
 
 export default async function AdminDashboard() {
