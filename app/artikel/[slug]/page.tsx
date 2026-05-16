@@ -1,17 +1,20 @@
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase' // sesuaikan path import Anda jika masih pakai relative path
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+// 1. Ubah params menjadi Promise
 interface Props {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
-// Generate Meta Tags dinamis untuk setiap artikel
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  // 2. Await params sebelum digunakan
+  const resolvedParams = await params;
+
   const { data: post } = await supabase
     .from('posts')
     .select('seo_title, seo_description, title')
-    .eq('slug', params.slug)
+    .eq('slug', resolvedParams.slug)
     .single()
 
   if (!post) return { title: 'Not Found' }
@@ -28,10 +31,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ArticlePage({ params }: Props) {
+  // 3. Await params sebelum digunakan
+  const resolvedParams = await params;
+
   const { data: post } = await supabase
     .from('posts')
     .select('*')
-    .eq('slug', params.slug)
+    .eq('slug', resolvedParams.slug)
     .single()
 
   if (!post) notFound()
@@ -42,7 +48,6 @@ export default async function ArticlePage({ params }: Props) {
       <time className="text-sm text-gray-500 mb-8 block">
         {new Date(post.published_at).toLocaleDateString('id-ID')}
       </time>
-      {/* Jika konten berupa HTML dari editor, gunakan dangerouslySetInnerHTML */}
       <div dangerouslySetInnerHTML={{ __html: post.content }} />
     </article>
   )
