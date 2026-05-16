@@ -4,8 +4,26 @@ import FadeIn from '@/components/FadeIn'
 
 export const runtime = 'edge';
 
-// Data Terstruktur Dinamis (Platform Edukasi Vaskular)
-const servicesData: Record<string, any> = {
+// 1. Definisikan Interface untuk Data Layanan
+interface Highlight {
+  icon: string;
+  title: string;
+  desc: string;
+}
+
+interface ServiceType {
+  title: string;
+  subtitle: string;
+  hero: string;
+  overview: string;
+  callout: string;
+  highlightsTitle: string;
+  highlights: Highlight[];
+  conclusion: string;
+}
+
+// 2. Terapkan Interface ke Object (Menghilangkan any)
+const servicesData: Record<string, ServiceType> = {
   'diabetic-foot': {
     title: 'Diabetic Foot (Kaki Diabetes)',
     subtitle: 'Edukasi Pencegahan Amputasi & Perawatan Luka Komprehensif',
@@ -48,7 +66,7 @@ const servicesData: Record<string, any> = {
     subtitle: 'Mengenal Jalur Cuci Darah yang Andal dan Aman',
     hero: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=2000',
     overview: `
-      <p>Bagi pejuang gagal ginjal kronis (CKD) yang membutuhkan hemodialisa rutin, akses vaskular yang baik adalah "urat nadi" kehidupan mereka. Mesin cuci darah membutuhkan aliran darah yang sangat cepat, sesuatu yang tidak bisa diberikan oleh pembuluh darah vena biasa.</p>
+      <p>Bagi pejuang gagal ginjal kronis (CKD) yang membutuhkan hemodialisa rutin, akses vaskular yang baik adalah &quot;urat nadi&quot; kehidupan mereka. Mesin cuci darah membutuhkan aliran darah yang sangat cepat, sesuatu yang tidak bisa diberikan oleh pembuluh darah vena biasa.</p>
       <p>Sehat Vaskular rutin mengadakan sesi edukasi bersama komunitas pasien gagal ginjal untuk memberikan pemahaman menyeluruh tentang pentingnya persiapan dan perawatan akses cuci darah yang tepat.</p>
     `,
     callout: "Akses vaskular yang dipersiapkan dengan matang adalah kunci utama untuk kualitas hidup yang lebih baik bagi pasien hemodialisa.",
@@ -235,7 +253,6 @@ export default async function LayananDetailPage({ params }: Props) {
       {/* HEADER HERO */}
       <div className="w-full h-[50vh] relative bg-svBlue-900 border-t border-svBlue-800">
         <img src={service.hero} alt={service.title} className="w-full h-full object-cover opacity-50" />
-        {/* Diperbarui: bg-linear-to-t untuk Tailwind v4 */}
         <div className="absolute inset-0 bg-linear-to-t from-svBlue-900 via-svBlue-900/60 to-transparent" />
         <div className="absolute bottom-0 w-full">
           <div className="max-w-6xl mx-auto px-6 pb-16">
@@ -246,7 +263,6 @@ export default async function LayananDetailPage({ params }: Props) {
               <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4 max-w-4xl drop-shadow-lg">
                 {service.title}
               </h1>
-              {/* Diperbarui: Mengubah text-svMaroon-400 menjadi text-slate-200 agar kontras dan mudah dibaca */}
               <p className="text-xl md:text-2xl text-slate-200 font-medium max-w-2xl drop-shadow-md">
                 {service.subtitle}
               </p>
@@ -273,7 +289,8 @@ export default async function LayananDetailPage({ params }: Props) {
                 {/* Blok Callout Edukasi (Quote) */}
                 <FadeIn delay={0.3} direction="up">
                   <div className="relative bg-white rounded-3xl p-8 border-l-8 border-svMaroon-800 shadow-lg shadow-slate-200/50">
-                    <div className="absolute -top-6 -left-4 text-6xl text-svMaroon-800/10 font-serif">"</div>
+                    {/* 3. Perbaikan Entity: Gunakan &quot; alih-alih kutip ganda biasa */}
+                    <div className="absolute -top-6 -left-4 text-6xl text-svMaroon-800/10 font-serif">&quot;</div>
                     <p className="text-xl italic text-svBlue-900 font-medium leading-relaxed relative z-10">
                       {service.callout}
                     </p>
@@ -288,7 +305,8 @@ export default async function LayananDetailPage({ params }: Props) {
                       {service.highlightsTitle}
                     </h3>
                     <div className="grid sm:grid-cols-2 gap-6">
-                      {service.highlights.map((item: any, idx: number) => (
+                      {/* 4. Gunakan tipe Highlight yang sudah didefinisikan */}
+                      {service.highlights.map((item: Highlight, idx: number) => (
                         <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-100 hover:border-svMaroon-800/30 hover:shadow-xl transition-all duration-300">
                           <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center text-2xl mb-4">
                             {item.icon}
@@ -344,7 +362,6 @@ export default async function LayananDetailPage({ params }: Props) {
             <div className="lg:w-1/3">
               <FadeIn delay={0.4} direction="left">
                 <div className="sticky top-28 bg-svBlue-900 rounded-[2rem] p-8 shadow-2xl relative overflow-hidden">
-                  {/* Efek Latar Belakang Sidebar */}
                   <div className="absolute top-0 right-0 w-32 h-32 bg-svMaroon-800 rounded-full blur-[60px] opacity-50"></div>
                   
                   <div className="relative z-10 text-center">

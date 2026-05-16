@@ -6,25 +6,36 @@ import { supabase } from '@/lib/supabase'
 import { Plus, Trash2, Edit3, FileText, Calendar } from 'lucide-react'
 import Swal from 'sweetalert2'
 
+// 1. Definisikan struktur data (menggantikan 'any')
+interface Post {
+  title: string;
+  slug: string;
+  published_at: string;
+}
+
 export default function KelolaArtikel() {
-  const [posts, setPosts] = useState<any[]>([])
+  const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0) // 2. Trigger khusus untuk me-refresh data
 
-  // Function untuk mengambil data artikel terbaru dari Supabase
-  const fetchPosts = async () => {
-    setLoading(true)
-    const { data, error } = await supabase
-      .from('posts')
-      .select('title, slug, published_at')
-      .order('published_at', { ascending: false })
+  // 3. Letakkan fungsi fetch langsung di dalam useEffect
+  useEffect(() => {
+    const loadPosts = async () => {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('posts')
+        .select('title, slug, published_at')
+        .order('published_at', { ascending: false })
 
-    if (!error && data) {
-      setPosts(data)
+      if (!error && data) {
+        setPosts(data)
+      }
+      setLoading(false)
     }
-    setLoading(false)
-  }
 
-  // Function untuk menghapus artikel dengan SweetAlert2
+    loadPosts()
+  }, [refreshKey]) // Akan berjalan otomatis setiap kali refreshKey berubah
+
   const handleDelete = async (slug: string) => {
     const result = await Swal.fire({
       title: 'Hapus Artikel?',
@@ -62,14 +73,10 @@ export default function KelolaArtikel() {
           timer: 1500,
           customClass: { popup: 'rounded-3xl' }
         })
-        fetchPosts() // Refresh data tabel
+        setRefreshKey((prev) => prev + 1) // 4. Panggil refreshKey untuk memperbarui tabel
       }
     }
   }
-
-  useEffect(() => {
-    fetchPosts()
-  }, [])
 
   return (
     <div className="max-w-6xl mx-auto">

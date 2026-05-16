@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
-import { createClient } from '@supabase/supabase-js' // Perbaikan: Impor langsung dari library resmi
+import { createClient } from '@supabase/supabase-js' 
 import { NextResponse } from 'next/server'
 
 // Inisialisasi Supabase khusus untuk fungsi background (Admin Mode)
@@ -89,8 +89,10 @@ export async function GET(req: Request) {
       message: `Artikel baru berhasil dibuat: ${articleData.title}` 
     })
 
-  } catch (error: any) {
-    console.error("Cron Error:", error.message)
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 })
+  } catch (error: unknown) {
+    // Penanganan error tanpa menggunakan any
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    console.error("Cron Error:", errorMessage)
+    return NextResponse.json({ success: false, error: errorMessage }, { status: 500 })
   }
 }

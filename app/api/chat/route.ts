@@ -1,6 +1,12 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { NextResponse } from 'next/server'
 
+// Definisikan struktur data history agar TypeScript tidak error
+interface ChatMessage {
+  role: string;
+  content: string;
+}
+
 export async function POST(req: Request) {
   try {
     const apiKey = process.env.GEMINI_API_KEY
@@ -29,7 +35,8 @@ export async function POST(req: Request) {
       systemInstruction: systemPrompt,
     })
 
-    const formattedHistory = history.map((msg: any) => ({
+    // Gunakan ChatMessage pengganti any
+    const formattedHistory = history.map((msg: ChatMessage) => ({
       role: msg.role === 'user' ? 'user' : 'model',
       parts: [{ text: msg.content }]
     }))
@@ -39,7 +46,9 @@ export async function POST(req: Request) {
     const responseText = result.response.text()
 
     return NextResponse.json({ reply: responseText })
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  } catch (error: unknown) {
+    // Penanganan error tanpa menggunakan any
+    const errorMessage = error instanceof Error ? error.message : 'Terjadi kesalahan pada server'
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }
