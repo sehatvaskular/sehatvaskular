@@ -6,20 +6,33 @@ import { supabase } from '@/lib/supabase'
 import { Plus, Trash2, Edit3, Handshake } from 'lucide-react'
 import Swal from 'sweetalert2'
 
+// Tambahkan Interface pengganti 'any'
+interface Partner {
+  id: number;
+  name: string;
+  logo_url: string;
+  display_order: number;
+}
+
 export default function KelolaMitra() {
-  const [partners, setPartners] = useState<any[]>([])
+  const [partners, setPartners] = useState<Partner[]>([])
   const [loading, setLoading] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0) // Tambahkan trigger refresh
 
-  const fetchPartners = async () => {
-    setLoading(true)
-    const { data, error } = await supabase
-      .from('partners')
-      .select('*')
-      .order('display_order', { ascending: true })
+  // Pindahkan fetch langsung ke dalam useEffect
+  useEffect(() => {
+    const loadPartners = async () => {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('partners')
+        .select('*')
+        .order('display_order', { ascending: true })
 
-    if (!error && data) setPartners(data)
-    setLoading(false)
-  }
+      if (!error && data) setPartners(data)
+      setLoading(false)
+    }
+    loadPartners()
+  }, [refreshKey])
 
   const handleDelete = async (id: number) => {
     const result = await Swal.fire({
@@ -41,14 +54,10 @@ export default function KelolaMitra() {
         Swal.fire({ icon: 'error', title: 'Gagal', text: error.message, customClass: { popup: 'rounded-3xl' } })
       } else {
         Swal.fire({ icon: 'success', title: 'Terhapus!', showConfirmButton: false, timer: 1500, customClass: { popup: 'rounded-3xl' } })
-        fetchPartners()
+        setRefreshKey(prev => prev + 1) // Gunakan refreshKey
       }
     }
   }
-
-  useEffect(() => {
-    fetchPartners()
-  }, [])
 
   return (
     <div className="max-w-6xl mx-auto">

@@ -4,7 +4,14 @@ import FadeIn from '@/components/FadeIn'
 
 export const revalidate = 60
 
-// 1. DATA DUMMY BACKUP UNTUK DOKTER
+// 1. Definisikan tipe data untuk menghindari penggunaan 'any'
+interface Partner {
+  id: number;
+  name: string;
+  logo_url: string;
+}
+
+// 2. DATA DUMMY BACKUP UNTUK DOKTER
 const dummyDoctors = [
   {
     id: 1,
@@ -29,7 +36,7 @@ const dummyDoctors = [
   }
 ]
 
-// 2. DATA DUMMY BACKUP UNTUK ARTIKEL
+// 3. DATA DUMMY BACKUP UNTUK ARTIKEL
 const dummyPosts = [
   {
     slug: 'mengenal-peripheral-artery-disease',
@@ -54,8 +61,8 @@ const dummyPosts = [
   }
 ]
 
-// 3. DATA DUMMY BACKUP UNTUK PARTNER/KOLABORASI
-const dummyPartners = [
+// 4. DATA DUMMY BACKUP UNTUK PARTNER/KOLABORASI
+const dummyPartners: Partner[] = [
   { id: 1, name: 'RS IHC Lavalette', logo_url: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Pertamedika_IHC_Logo.png' },
   { id: 2, name: 'RSSA Malang', logo_url: 'https://via.placeholder.com/300x150/ffffff/0f172a?text=RSSA+Malang' },
   { id: 3, name: 'Boston Scientific', logo_url: 'https://upload.wikimedia.org/wikipedia/commons/5/58/Boston_Scientific_logo.svg' },
@@ -70,12 +77,12 @@ export default async function Home() {
   const { data: dbPosts } = await supabase.from('posts').select('title, slug, excerpt, published_at, image_url').order('published_at', { ascending: false }).limit(3)
   const { data: dbDoctors } = await supabase.from('doctors').select('*').order('display_order', { ascending: true })
   
-  // Perbaikan TypeScript: Menghapus .catch()
+  // Perbaikan TypeScript: Menghapus (error) agar tidak dianggap unused variable
   let dbPartners = null;
   try {
     const { data } = await supabase.from('partners').select('*').order('display_order', { ascending: true });
     dbPartners = data;
-  } catch (error) {
+  } catch {
     // Biarkan kosong agar fallback ke dummy berjalan mulus jika tabel belum ada
   }
 
@@ -212,7 +219,8 @@ export default async function Home() {
           </FadeIn>
           <FadeIn delay={0.2} direction="up">
             <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16">
-              {partners.map((partner: any) => (
+              {/* Perbaikan tipe data di sini */}
+              {partners.map((partner: Partner) => (
                 <div key={partner.id} className="w-28 md:w-40 h-16 relative flex items-center justify-center grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition duration-300">
                   <img 
                     src={partner.logo_url} 

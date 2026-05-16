@@ -6,20 +6,35 @@ import { supabase } from '@/lib/supabase'
 import { Plus, Trash2, Edit3, Users } from 'lucide-react'
 import Swal from 'sweetalert2'
 
+// Tambahkan Interface pengganti 'any'
+interface Doctor {
+  id: number;
+  name: string;
+  title: string;
+  specialty: string;
+  image_url: string;
+  display_order: number;
+}
+
 export default function KelolaDokter() {
-  const [doctors, setDoctors] = useState<any[]>([])
+  const [doctors, setDoctors] = useState<Doctor[]>([])
   const [loading, setLoading] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0) // Tambahkan trigger refresh
 
-  const fetchDoctors = async () => {
-    setLoading(true)
-    const { data, error } = await supabase
-      .from('doctors')
-      .select('*')
-      .order('display_order', { ascending: true })
+  // Pindahkan fetch langsung ke dalam useEffect
+  useEffect(() => {
+    const loadDoctors = async () => {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('doctors')
+        .select('*')
+        .order('display_order', { ascending: true })
 
-    if (!error && data) setDoctors(data)
-    setLoading(false)
-  }
+      if (!error && data) setDoctors(data)
+      setLoading(false)
+    }
+    loadDoctors()
+  }, [refreshKey])
 
   const handleDelete = async (id: number) => {
     const result = await Swal.fire({
@@ -41,14 +56,10 @@ export default function KelolaDokter() {
         Swal.fire({ icon: 'error', title: 'Gagal', text: error.message, customClass: { popup: 'rounded-3xl' } })
       } else {
         Swal.fire({ icon: 'success', title: 'Terhapus!', showConfirmButton: false, timer: 1500, customClass: { popup: 'rounded-3xl' } })
-        fetchDoctors()
+        setRefreshKey(prev => prev + 1) // Gunakan refreshKey
       }
     }
   }
-
-  useEffect(() => {
-    fetchDoctors()
-  }, [])
 
   return (
     <div className="max-w-6xl mx-auto">
