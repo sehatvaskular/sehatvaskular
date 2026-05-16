@@ -2,14 +2,6 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 import { createClient } from '@supabase/supabase-js' 
 import { NextResponse } from 'next/server'
 
-// Inisialisasi Supabase khusus untuk fungsi background (Admin Mode)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-// PENTING: Gunakan SUPABASE_SERVICE_ROLE_KEY di .env.local Anda untuk bypass RLS
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY! 
-
-// Buat client admin
-const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
-
 export async function GET(req: Request) {
   try {
     // 1. Validasi Keamanan: Cek Header Authorization
@@ -17,6 +9,16 @@ export async function GET(req: Request) {
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
       return NextResponse.json({ error: 'Unauthorized access' }, { status: 401 })
     }
+
+    // PINDAHKAN INISIALISASI KE SINI (Di dalam fungsi GET)
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY! 
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+      throw new Error("Supabase Key belum di-setting di Environment Variables.")
+    }
+    
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
 
     const apiKey = process.env.GEMINI_API_KEY
     if (!apiKey) throw new Error("API Key Gemini belum di-setting.")
@@ -90,7 +92,6 @@ export async function GET(req: Request) {
     })
 
   } catch (error: unknown) {
-    // Penanganan error tanpa menggunakan any
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     console.error("Cron Error:", errorMessage)
     return NextResponse.json({ success: false, error: errorMessage }, { status: 500 })
