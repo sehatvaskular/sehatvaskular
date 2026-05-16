@@ -2,6 +2,8 @@ import { supabase } from '@/lib/supabase' // sesuaikan path import Anda jika mas
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+export const runtime = 'edge';
+
 // 1. Ubah params menjadi Promise
 interface Props {
   params: Promise<{ slug: string }>
