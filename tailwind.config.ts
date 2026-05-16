@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import typography from "@tailwindcss/typography";
 
 export default {
   content: [
@@ -7,9 +8,21 @@ export default {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: { // <-- Pastikan warnanya ada di dalam 'extend' ini
+      colors: {
+        svBlue: {
+          900: '#0f172a', 
+          800: '#1e293b',
+        },
+        svMaroon: {
+          900: '#7f1d1d', 
+          800: '#991b1b',
+          600: '#dc2626',
+        }
+      }
+    },
   },
   plugins: [
-    require('@tailwindcss/typography'), // Tambahkan ini
+    typography,
   ],
 } satisfies Config;
