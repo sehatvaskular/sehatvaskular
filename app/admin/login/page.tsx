@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
 export default function AdminLogin() {
@@ -9,7 +8,6 @@ export default function AdminLogin() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -22,27 +20,31 @@ export default function AdminLogin() {
     })
 
     if (error) {
-      setError('Email atau password salah.')
+      // Tampilkan pesan error ASLI dari Supabase agar kita tahu apa masalahnya
+      setError(error.message === 'Invalid login credentials' ? 'Email atau password salah.' : error.message)
       setLoading(false)
     } else if (data.session) {
-      // Login sukses, arahkan ke dashboard
-      router.push('/admin')
-      router.refresh()
+      // LOGIN BERHASIL! 
+      // Kita gunakan window.location.href untuk memaksa browser memuat ulang 
+      // halaman secara penuh agar Middleware langsung mengenali sesi Anda.
+      window.location.href = '/admin'
+    } else {
+      setError('Terjadi kesalahan tidak terduga. Silakan coba lagi.')
+      setLoading(false)
     }
   }
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center p-6 relative">
-      {/* Background Ornamen */}
       <div className="absolute top-0 left-0 w-full h-1/2 bg-svBlue-900 z-0"></div>
 
       <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl z-10 overflow-hidden">
         <div className="bg-svBlue-900 p-8 text-center border-b-4 border-svMaroon-800 flex flex-col items-center">
-          {/* LOGO HALAMAN LOGIN */}
           <img 
             src="/logoICO.png" 
             alt="Login Logo" 
             className="h-16 w-auto object-contain mb-4 drop-shadow-md"
+            onError={(e) => { e.currentTarget.style.display = 'none' }}
           />
           <h1 className="text-2xl font-bold text-white">Admin Login</h1>
           <p className="text-slate-300 text-sm mt-1">Sistem Manajemen Konten</p>
@@ -84,7 +86,12 @@ export default function AdminLogin() {
             disabled={loading}
             className="w-full py-4 bg-svMaroon-800 text-white font-bold rounded-xl hover:bg-svMaroon-900 transition shadow-lg disabled:opacity-70 flex justify-center items-center"
           >
-            {loading ? 'Memverifikasi...' : 'Masuk ke Dashboard'}
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Memverifikasi...
+              </span>
+            ) : 'Masuk ke Dashboard'}
           </button>
         </form>
       </div>
