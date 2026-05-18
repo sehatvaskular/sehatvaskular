@@ -47,7 +47,7 @@ export async function GET(req: Request) {
     // 4. Perintahkan Gemini membuat artikel berformat JSON
     // Kita gunakan model flash agar lebih cepat mencegah timeout di Edge server
     const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash', // Model Flash 1.5 lebih stabil merespons JSON panjang
+      model: 'gemini-3.1-flash-lite', // Model Flash 1.5 lebih stabil merespons JSON panjang
       generationConfig: { 
           responseMimeType: "application/json",
           maxOutputTokens: 4000, // Memaksa AI memberikan output yang lebih panjang
