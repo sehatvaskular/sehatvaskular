@@ -142,7 +142,7 @@ export default async function DoctorDetailPage({ params }: Props) {
         
         {/* Tombol Navigasi Kembali */}
         <Link href="/tim-dokter" className="inline-flex items-center gap-2 text-sm font-bold text-svMaroon-800 hover:text-svMaroon-600 transition mb-10">
-          ← KEMBALI KE JARRINGAN PAKAR
+          ← KEMBALI KE TIM DOKTER
         </Link>
 
         {/* ROW LAYOUT UTAMA */}
