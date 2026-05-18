@@ -73,20 +73,17 @@ const dummyPartners: Partner[] = [
 ]
 
 export default async function Home() {
-  // Ambil data dari Supabase (Ditambahkan image_url pada fetch posts)
   const { data: dbPosts } = await supabase.from('posts').select('title, slug, excerpt, published_at, image_url').order('published_at', { ascending: false }).limit(3)
   const { data: dbDoctors } = await supabase.from('doctors').select('*').order('display_order', { ascending: true })
   
-  // Perbaikan TypeScript: Menghapus (error) agar tidak dianggap unused variable
   let dbPartners = null;
   try {
     const { data } = await supabase.from('partners').select('*').order('display_order', { ascending: true });
     dbPartners = data;
   } catch {
-    // Biarkan kosong agar fallback ke dummy berjalan mulus jika tabel belum ada
+    // Fallback
   }
 
-  // Fallback ke data dummy jika database kosong atau error
   const posts = dbPosts && dbPosts.length > 0 ? dbPosts : dummyPosts
   const doctors = dbDoctors && dbDoctors.length > 0 ? dbDoctors : dummyDoctors
   const partners = dbPartners && dbPartners.length > 0 ? dbPartners : dummyPartners
@@ -146,31 +143,31 @@ export default async function Home() {
           </FadeIn>
           <div className="grid md:grid-cols-3 gap-8">
             <FadeIn delay={0.1} direction="up">
-              <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:shadow-xl hover:border-svMaroon-900/20 transition group h-full">
+              <Link href="/layanan/diabetic-foot" className="block p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:shadow-xl hover:border-svMaroon-900/20 transition group h-full">
                 <div className="w-14 h-14 bg-svMaroon-900/10 text-svMaroon-900 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:bg-svMaroon-800 group-hover:text-white transition">
                   🩸
                 </div>
-                <h4 className="text-xl font-bold text-svBlue-900 mb-3">Diabetic Foot</h4>
+                <h4 className="text-xl font-bold text-svBlue-900 mb-3 group-hover:text-svMaroon-800 transition-colors">Diabetic Foot</h4>
                 <p className="text-slate-600 leading-relaxed">Pencegahan amputasi dan perawatan luka kaki diabetes secara komprehensif.</p>
-              </div>
+              </Link>
             </FadeIn>
             <FadeIn delay={0.3} direction="up">
-              <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:shadow-xl hover:border-svMaroon-900/20 transition group h-full">
+              <Link href="/layanan/pad" className="block p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:shadow-xl hover:border-svMaroon-900/20 transition group h-full">
                 <div className="w-14 h-14 bg-svMaroon-900/10 text-svMaroon-900 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:bg-svMaroon-800 group-hover:text-white transition">
                   🫀
                 </div>
-                <h4 className="text-xl font-bold text-svBlue-900 mb-3">Artery Disease</h4>
+                <h4 className="text-xl font-bold text-svBlue-900 mb-3 group-hover:text-svMaroon-800 transition-colors">Artery Disease</h4>
                 <p className="text-slate-600 leading-relaxed">Penanganan penyumbatan pembuluh darah arteri di area kaki dan tangan.</p>
-              </div>
+              </Link>
             </FadeIn>
             <FadeIn delay={0.5} direction="up">
-              <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:shadow-xl hover:border-svMaroon-900/20 transition group h-full">
+              <Link href="/layanan/varises" className="block p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:shadow-xl hover:border-svMaroon-900/20 transition group h-full">
                 <div className="w-14 h-14 bg-svMaroon-900/10 text-svMaroon-900 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:bg-svMaroon-800 group-hover:text-white transition">
                   🩺
                 </div>
-                <h4 className="text-xl font-bold text-svBlue-900 mb-3">Varises & Vena</h4>
+                <h4 className="text-xl font-bold text-svBlue-900 mb-3 group-hover:text-svMaroon-800 transition-colors">Varises & Vena</h4>
                 <p className="text-slate-600 leading-relaxed">Tindakan laser dan pembedahan kosmetik untuk varises dan gangguan vena.</p>
-              </div>
+              </Link>
             </FadeIn>
           </div>
         </div>
@@ -189,20 +186,23 @@ export default async function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {doctors.map((doc, index) => (
               <FadeIn key={doc.id || index} delay={0.2 * index} direction="up">
-                <div className="text-center group">
-                  <div className="relative mb-6 mx-auto w-full max-w-[320px] aspect-4/5 overflow-hidden rounded-4xl bg-linear-to-b from-slate-200 to-slate-400 shadow-xl">
+                <Link href={`/tim-dokter/${doc.id}`} className="block text-center group">
+                  <div className="relative mb-6 mx-auto w-full max-w-[320px] aspect-4/5 overflow-hidden rounded-4xl bg-linear-to-b from-slate-200 to-slate-400 shadow-xl group-hover:shadow-2xl transition-all duration-300">
                     <img 
                       src={doc.image_url} 
                       alt={doc.name} 
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                     />
+                    <div className="absolute inset-0 bg-svBlue-900/0 group-hover:bg-svBlue-900/20 transition-colors duration-300 flex items-center justify-center">
+                      <span className="opacity-0 group-hover:opacity-100 bg-white text-svBlue-900 font-bold py-2 px-6 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">Lihat Profil</span>
+                    </div>
                   </div>
-                  <h4 className="text-2xl font-bold text-svBlue-900 mb-1">{doc.name}</h4>
+                  <h4 className="text-2xl font-bold text-svBlue-900 mb-1 group-hover:text-svMaroon-800 transition-colors">{doc.name}</h4>
                   <h4 className="text-lg font-medium text-slate-500 mb-3">{doc.title}</h4>
                   <p className="inline-block px-4 py-1 rounded-full bg-svMaroon-900/10 text-svMaroon-800 font-bold tracking-widest text-xs uppercase">
                     {doc.specialty}
                   </p>
-                </div>
+                </Link>
               </FadeIn>
             ))}
           </div>
@@ -219,7 +219,6 @@ export default async function Home() {
           </FadeIn>
           <FadeIn delay={0.2} direction="up">
             <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16">
-              {/* Perbaikan tipe data di sini */}
               {partners.map((partner: Partner) => (
                 <div key={partner.id} className="w-28 md:w-40 h-16 relative flex items-center justify-center grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition duration-300">
                   <img 
@@ -248,13 +247,13 @@ export default async function Home() {
             {posts.map((post, index) => (
               <FadeIn key={post.slug} delay={0.2 * (index + 1)} direction="up">
                 <article className="group cursor-pointer bg-white rounded-3xl p-4 border border-slate-100 hover:shadow-xl transition h-full flex flex-col">
-                  <div className="h-48 rounded-2xl bg-slate-200 mb-6 overflow-hidden relative">
+                  <Link href={`/artikel/${post.slug}`} className="block h-48 rounded-2xl bg-slate-200 mb-6 overflow-hidden relative">
                     <img 
                       src={post.image_url || defaultThumbnail} 
                       alt={post.title} 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                     />
-                  </div>
+                  </Link>
                   <div className="px-2 flex flex-col grow">
                     <time className="text-xs font-bold text-svMaroon-800 mb-3 block uppercase tracking-wider">
                       {new Date(post.published_at).toLocaleDateString('id-ID', { month: 'long', day: 'numeric', year: 'numeric' })}

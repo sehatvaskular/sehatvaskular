@@ -2,23 +2,49 @@
 
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useState, useEffect } from 'react'
 import ChatBot from './ChatBot'
+import { supabase } from '@/lib/supabase' // Tambahkan import Supabase
+
+// Fallback data dokter agar menu tidak kosong saat loading pertama kali
+const fallbackDoctors = [
+  { id: 1, name: 'dr. Kresna Agung Prabowo' },
+  { id: 2, name: 'dr. Kurniawan Eko Wibowo' },
+  { id: 3, name: 'dr. Josep Joko Hendratno' }
+]
 
 export default function LayoutWrapper({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const isAdmin = pathname?.startsWith('/admin')
 
-  // State untuk mengontrol buka/tutup menu di HP & Dropdown di Laptop
+  // State navigasi
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false) // Untuk Edukasi
+  const [isDoctorDropdownOpen, setIsDoctorDropdownOpen] = useState(false) // Untuk Tim Dokter
+
+  // State data dokter untuk menu dropdown
+  const [doctorsList, setDoctorsList] = useState<any[]>(fallbackDoctors)
+
+  // Ambil data dokter asli dari database secara asinkron (berjalan di latar belakang)
+  useEffect(() => {
+    const fetchDoctorsForMenu = async () => {
+      const { data } = await supabase
+        .from('doctors')
+        .select('id, name')
+        .order('display_order', { ascending: true })
+      
+      if (data && data.length > 0) {
+        setDoctorsList(data)
+      }
+    }
+    fetchDoctorsForMenu()
+  }, [])
 
   // Jika URL adalah /admin, jangan tampilkan Header, Footer & ChatBot Publik
   if (isAdmin) {
     return <>{children}</>
   }
 
-  // Jika web publik biasa, tampilkan Header, Footer, & ChatBot
   return (
     <>
       <header className="bg-svBlue-900 sticky top-0 z-50 border-b-4 border-svMaroon-900 shadow-xl">
@@ -30,7 +56,7 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
               src="/logo.png" 
               alt="Logo Sehat Vaskular" 
               className="h-10 md:h-12 w-auto object-contain hover:opacity-90 transition-opacity" 
-              onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/200x50?text=Logo+Sehat+Vaskular' }} // Fallback jika logo belum di-upload
+              onError={(e) => { e.currentTarget.src = 'https://via.placeholder.com/200x50?text=Logo+Sehat+Vaskular' }}
             />
           </Link>
 
@@ -62,7 +88,6 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
                 Edukasi <span className="text-xs ml-1 transition-transform duration-200" style={{ transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>▼</span>
               </Link>
               
-              {/* Isi Dropdown (Muncul saat di-hover) */}
               {isDropdownOpen && (
                 <div className="absolute top-[80px] left-0 w-72 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                   <Link onClick={() => setIsDropdownOpen(false)} href="/layanan/diabetic-foot" className="px-5 py-3 text-sm text-svBlue-900 hover:bg-slate-50 hover:text-svMaroon-800 font-bold border-l-4 border-transparent hover:border-svMaroon-800 transition">Diabetic Foot</Link>
@@ -79,7 +104,35 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
               Artikel
             </Link>
             
-            <Link href="/tim-dokter" className="hover:text-white hover:underline decoration-svMaroon-600 decoration-2 underline-offset-8 transition-all">Tim Dokter</Link>
+            {/* Dropdown Tim Dokter */}
+            <div 
+              className="relative h-full flex items-center group"
+              onMouseEnter={() => setIsDoctorDropdownOpen(true)}
+              onMouseLeave={() => setIsDoctorDropdownOpen(false)}
+            >
+              <Link href="/tim-dokter" className="flex items-center gap-1 hover:text-white hover:underline decoration-svMaroon-600 decoration-2 underline-offset-8 transition-all py-8">
+                Tim Dokter <span className="text-xs ml-1 transition-transform duration-200" style={{ transform: isDoctorDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>▼</span>
+              </Link>
+              
+              {isDoctorDropdownOpen && (
+                <div className="absolute top-[80px] left-0 w-80 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <Link onClick={() => setIsDoctorDropdownOpen(false)} href="/tim-dokter" className="px-5 py-3 text-sm text-svBlue-900 hover:bg-slate-50 font-bold border-b border-slate-100 transition">
+                    Lihat Semua Tim Pakar →
+                  </Link>
+                  {doctorsList.map((doc) => (
+                    <Link 
+                      key={doc.id} 
+                      onClick={() => setIsDoctorDropdownOpen(false)} 
+                      href={`/tim-dokter/${doc.id}`} 
+                      className="px-5 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-svMaroon-800 font-medium border-l-4 border-transparent hover:border-svMaroon-800 transition"
+                    >
+                      {doc.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <Link href="/kontak" className="hover:text-white hover:underline decoration-svMaroon-600 decoration-2 underline-offset-8 transition-all">Kontak</Link>
           </nav>
 
@@ -95,7 +148,7 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
             <Link onClick={() => setIsMobileMenuOpen(false)} href="/" className="text-xl font-bold text-white border-b border-white/10 pb-4">Beranda</Link>
             
             <div className="flex flex-col gap-4 border-b border-white/10 pb-4">
-              <span className="text-xl font-bold text-white">Topik Edukasi</span>
+              <Link onClick={() => setIsMobileMenuOpen(false)} href="/layanan" className="text-xl font-bold text-white">Topik Edukasi</Link>
               <Link onClick={() => setIsMobileMenuOpen(false)} href="/layanan/diabetic-foot" className="text-slate-300 pl-4 py-2 hover:text-white">Diabetic Foot</Link>
               <Link onClick={() => setIsMobileMenuOpen(false)} href="/layanan/akses-hemodialisa" className="text-slate-300 pl-4 py-2 hover:text-white">Akses Hemodialisa</Link>
               <Link onClick={() => setIsMobileMenuOpen(false)} href="/layanan/varises" className="text-slate-300 pl-4 py-2 hover:text-white">Varises</Link>
@@ -105,7 +158,21 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
             </div>
 
             <Link onClick={() => setIsMobileMenuOpen(false)} href="/artikel" className="text-xl font-bold text-white border-b border-white/10 pb-4">Artikel</Link>
-            <Link onClick={() => setIsMobileMenuOpen(false)} href="/tim-dokter" className="text-xl font-bold text-white border-b border-white/10 pb-4">Tim Dokter</Link>
+            
+            <div className="flex flex-col gap-4 border-b border-white/10 pb-4">
+              <Link onClick={() => setIsMobileMenuOpen(false)} href="/tim-dokter" className="text-xl font-bold text-white">Tim Dokter</Link>
+              {doctorsList.map((doc) => (
+                <Link 
+                  key={doc.id} 
+                  onClick={() => setIsMobileMenuOpen(false)} 
+                  href={`/tim-dokter/${doc.id}`} 
+                  className="text-slate-300 pl-4 py-2 hover:text-white"
+                >
+                  {doc.name}
+                </Link>
+              ))}
+            </div>
+
             <Link onClick={() => setIsMobileMenuOpen(false)} href="/kontak" className="text-xl font-bold text-white pb-4">Kontak</Link>
           </div>
         )}
