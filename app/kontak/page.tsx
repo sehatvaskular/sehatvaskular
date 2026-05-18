@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import FadeIn from '@/components/FadeIn'
-// Import ikon ala developer dari lucide-react
-import { Instagram, Youtube, Facebook, Smartphone, Send, TerminalSquare, MessageSquareCode } from 'lucide-react'
+// Menggunakan ikon generik standar yang 100% dijamin ada di semua versi lucide-react
+import { Camera, Smartphone, Video, Users, Send, Terminal, MessageSquare } from 'lucide-react'
 
 export default function KontakPage() {
   const [name, setName] = useState('')
@@ -23,33 +23,33 @@ export default function KontakPage() {
   const socialMedia = [
     {
       name: 'Instagram',
-      handle: 'const ig = "@sehatvaskular"', // Vibe coding
+      handle: 'const ig = "@sehatvaskular"',
       url: 'https://instagram.com/sehatvaskular',
-      icon: <Instagram size={28} strokeWidth={1.5} />,
+      icon: <Camera size={28} strokeWidth={1.5} />, // Ikon Kamera
       color: 'from-purple-600 via-pink-500 to-yellow-500',
       desc: 'Dapatkan infografis harian, tips cepat pembuluh darah, dan cuplikan video edukasi.'
     },
     {
       name: 'TikTok',
-      handle: 'let tiktok = "@sehatvaskular"', // Vibe coding
+      handle: 'let tiktok = "@sehatvaskular"',
       url: 'https://tiktok.com/@sehatvaskular',
-      icon: <Smartphone size={28} strokeWidth={1.5} />,
+      icon: <Smartphone size={28} strokeWidth={1.5} />, // Ikon Smartphone
       color: 'from-slate-900 via-stone-800 to-black',
       desc: 'Tonton video penjelasan singkat dan interaktif langsung dari tim dokter spesialis.'
     },
     {
       name: 'YouTube',
-      handle: 'var yt = "Sehat Vaskular"', // Vibe coding
+      handle: 'var yt = "Sehat Vaskular"',
       url: 'https://youtube.com/@sehatvaskular',
-      icon: <Youtube size={28} strokeWidth={1.5} />,
+      icon: <Video size={28} strokeWidth={1.5} />, // Ikon Video/Player
       color: 'from-red-600 to-rose-700',
       desc: 'Saksikan video edukasi mendalam, rekaman simposium medis, dan bincang sehat.'
     },
     {
       name: 'Facebook',
-      handle: 'fb.init("Sehat Vaskular")', // Vibe coding
+      handle: 'fb.init("Sehat Vaskular")',
       url: 'https://facebook.com/sehatvaskular',
-      icon: <Facebook size={28} strokeWidth={1.5} />,
+      icon: <Users size={28} strokeWidth={1.5} />, // Ikon Komunitas/Grup
       color: 'from-blue-600 to-blue-800',
       desc: 'Bergabunglah dengan komunitas literasi kesehatan pembuluh darah terbesar di Indonesia.'
     }
@@ -63,7 +63,7 @@ export default function KontakPage() {
         <div className="max-w-7xl mx-auto px-6 text-center relative z-10 flex flex-col items-center">
           <FadeIn direction="up">
             <div className="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-svMaroon-900/40 border border-svMaroon-600 text-red-200 text-xs font-bold tracking-widest uppercase mb-6">
-              <TerminalSquare size={14} />
+              <Terminal size={14} />
               <span>CONNECT_WITH_US</span>
             </div>
           </FadeIn>
@@ -85,12 +85,11 @@ export default function KontakPage() {
             
             {/* JALUR KANAN: FORMULIR HUBUNGI ADMIN */}
             <div className="lg:col-span-5 bg-white p-8 md:p-10 rounded-[2.5rem] border border-slate-200 shadow-xl order-2 lg:order-1 relative overflow-hidden">
-              {/* Ornamen Garis Terminal */}
               <div className="absolute top-0 left-0 w-full h-1.5 bg-linear-to-r from-svMaroon-800 to-red-400"></div>
               
               <FadeIn direction="up">
                 <div className="flex items-center gap-3 mb-2">
-                  <MessageSquareCode size={28} className="text-svMaroon-800" />
+                  <MessageSquare size={28} className="text-svMaroon-800" />
                   <h2 className="text-2xl font-bold text-svBlue-900">Direct Message</h2>
                 </div>
                 <p className="text-slate-500 text-sm mb-8 font-mono">{'//'} Punya pertanyaan medis? Hubungi kami.</p>
@@ -156,7 +155,6 @@ export default function KontakPage() {
                       rel="noreferrer" 
                       className="group block bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-svMaroon-800/50 transition-all duration-300 h-full flex flex-col justify-between overflow-hidden relative"
                     >
-                      {/* Aksen garis pinggir ala code editor */}
                       <div className="absolute left-0 top-0 w-1 h-full bg-slate-100 group-hover:bg-svMaroon-600 transition-colors"></div>
                       
                       <div className="pl-2">
@@ -166,7 +164,6 @@ export default function KontakPage() {
                         <h3 className="text-xl font-bold text-svBlue-900 group-hover:text-svMaroon-800 transition-colors mb-2">
                           {soc.name}
                         </h3>
-                        {/* Font monospace ala koding */}
                         <p className="text-xs font-mono font-bold text-slate-500 bg-slate-100 py-1 px-2 rounded-md inline-block mb-3 border border-slate-200">
                           {soc.handle}
                         </p>
