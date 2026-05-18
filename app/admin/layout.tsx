@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
-import { LayoutDashboard, FileText, Users, Handshake, LogOut, Settings } from 'lucide-react'
+// Tambahkan PlaySquare di import lucide-react
+import { LayoutDashboard, FileText, Users, Handshake, PlaySquare, LogOut, Settings } from 'lucide-react'
 import Swal from 'sweetalert2'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -73,7 +74,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </Link>
         </div>
 
-        <div className="flex flex-col flex-grow py-6 px-4 gap-2">
+        <div className="flex flex-col flex-grow py-6 px-4 gap-2 overflow-y-auto custom-scrollbar">
           <p className="text-xs font-bold tracking-widest text-slate-500 mb-2 px-2">MENU UTAMA</p>
           
           <Link href="/admin" className={`flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10 transition group ${pathname === '/admin' ? 'bg-white/10 text-white' : 'hover:text-white'}`}>
@@ -94,6 +95,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/admin/mitra" className={`flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10 transition group ${pathname?.includes('/admin/mitra') ? 'bg-white/10 text-white' : 'hover:text-white'}`}>
             <Handshake size={20} className="text-svMaroon-400" />
             <span className="font-medium">Mitra & Kolaborasi</span>
+          </Link>
+
+          {/* MENU JURNAL VASKULAR DITAMBAHKAN DI SINI */}
+          <Link href="/admin/jurnal" className={`flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10 transition group ${pathname?.includes('/admin/jurnal') ? 'bg-white/10 text-white' : 'hover:text-white'}`}>
+            <PlaySquare size={20} className="text-svMaroon-400" />
+            <span className="font-medium">Jurnal Vaskular</span>
           </Link>
         </div>
 
