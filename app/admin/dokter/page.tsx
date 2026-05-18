@@ -6,7 +6,6 @@ import { supabase } from '@/lib/supabase'
 import { Plus, Trash2, Edit3, Users } from 'lucide-react'
 import Swal from 'sweetalert2'
 
-// Tambahkan Interface pengganti 'any'
 interface Doctor {
   id: number;
   name: string;
@@ -14,14 +13,18 @@ interface Doctor {
   specialty: string;
   image_url: string;
   display_order: number;
+  bio?: string;
+  education?: string[];
+  practice?: string[];
+  experience?: string[];
+  awards?: string[];
 }
 
 export default function KelolaDokter() {
   const [doctors, setDoctors] = useState<Doctor[]>([])
   const [loading, setLoading] = useState(true)
-  const [refreshKey, setRefreshKey] = useState(0) // Tambahkan trigger refresh
+  const [refreshKey, setRefreshKey] = useState(0)
 
-  // Pindahkan fetch langsung ke dalam useEffect
   useEffect(() => {
     const loadDoctors = async () => {
       setLoading(true)
@@ -56,7 +59,7 @@ export default function KelolaDokter() {
         Swal.fire({ icon: 'error', title: 'Gagal', text: error.message, customClass: { popup: 'rounded-3xl' } })
       } else {
         Swal.fire({ icon: 'success', title: 'Terhapus!', showConfirmButton: false, timer: 1500, customClass: { popup: 'rounded-3xl' } })
-        setRefreshKey(prev => prev + 1) // Gunakan refreshKey
+        setRefreshKey(prev => prev + 1)
       }
     }
   }
