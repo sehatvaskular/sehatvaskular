@@ -45,8 +45,8 @@ export default async function ArticlePage({ params }: Props) {
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
         <div className="absolute bottom-0 w-full">
           <div className="max-w-4xl mx-auto px-6 pb-12">
-            <Link href="/" className="text-blue-400 font-medium mb-6 inline-block hover:text-blue-300 transition">
-              ← Kembali ke Beranda
+            <Link href="/artikel" className="text-blue-400 font-medium mb-6 inline-block hover:text-blue-300 transition">
+              ← Kembali
             </Link>
             <h1 className="text-3xl md:text-5xl font-extrabold text-white leading-tight mb-4">
               {post.title}
