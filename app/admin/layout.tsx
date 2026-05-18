@@ -11,45 +11,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter()
   const pathname = usePathname()
   
-  const [loading, setLoading] = useState(true)
   const [userEmail, setUserEmail] = useState<string | null>('admin@sehatvaskular.com')
 
-  // Cek apakah URL saat ini adalah halaman login
   const isLoginPage = pathname === '/admin/login'
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-
-      if (!session && !isLoginPage) {
-        // Jika belum login dan mencoba masuk ke dashboard, lempar ke login
-        router.push('/admin/login')
-      } else if (session && isLoginPage) {
-        // Jika sudah login tapi mencoba buka halaman login, lempar ke dashboard
-        router.push('/admin')
-      } else if (session) {
-        // Simpan email admin yang sedang login untuk ditampilkan di Header
-        setUserEmail(session.user.email || 'Admin')
+    // Middleware sudah mengurus tendang-menendang user.
+    // Di sini kita HANYA fokus mengambil data email untuk ditampilkan di header.
+    const getUserData = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user && user.email) {
+        setUserEmail(user.email)
       }
-      
-      setLoading(false)
     }
 
-    checkAuth()
-
-    // Dengarkan perubahan status login/logout secara real-time
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session && !isLoginPage) {
-        router.push('/admin/login')
-      }
-    })
-
-    return () => {
-      authListener.subscription.unsubscribe()
+    if (!isLoginPage) {
+      getUserData()
     }
-  }, [pathname, router, isLoginPage])
+  }, [isLoginPage])
 
-  // Fungsi Logout dengan Pop-up Profesional
   const handleLogout = async () => {
     const result = await Swal.fire({
       title: 'Keluar dari Sistem?',
@@ -65,17 +45,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     if (result.isConfirmed) {
       await supabase.auth.signOut()
-      router.push('/admin/login')
+      // Paksa refresh rute agar middleware mendeteksi logout
+      window.location.href = '/admin/login' 
     }
-  }
-
-  // Tampilkan loading spinner saat memverifikasi sesi
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="w-12 h-12 border-4 border-svBlue-900 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    )
   }
 
   // Jika sedang di halaman login, HANYA render konten form loginnya (tanpa sidebar)
@@ -83,7 +55,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return <>{children}</>
   }
 
-  // Jika di halaman dashboard dan sudah diverifikasi, tampilkan Layout Admin Penuh
+  // Jika di halaman dashboard, tampilkan Layout Admin Penuh
   return (
     <div className="flex min-h-screen bg-slate-50 font-sans">
       
@@ -91,12 +63,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="w-64 bg-svBlue-900 text-slate-300 flex flex-col fixed h-full z-50">
         <div className="h-20 flex items-center px-6 border-b border-white/10">
           <Link href="/admin" className="flex items-center group w-full">
-            {/* LOGO ADMIN PANEL */}
             <img 
               src="/logoICO.png" 
               alt="Admin Logo" 
               className="h-8 w-auto object-contain"
+              onError={(e) => { e.currentTarget.style.display = 'none' }} // Sembunyikan jika tidak ada
             />
+            <span className="text-lg font-bold text-white tracking-tight ml-3">Admin Panel</span>
           </Link>
         </div>
 
@@ -147,7 +120,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="flex items-center gap-4">
             <div className="text-right hidden md:block">
               <p className="text-sm font-bold text-svBlue-900">Administrator</p>
-              {/* Email otomatis menyesuaikan dengan yang sedang login */}
               <p className="text-xs text-slate-500">{userEmail}</p>
             </div>
             <div className="w-10 h-10 bg-slate-200 rounded-full border-2 border-svMaroon-800 flex items-center justify-center overflow-hidden">
