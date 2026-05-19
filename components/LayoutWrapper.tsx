@@ -51,16 +51,14 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           
           {/* LOGO */}
-          <Link href="/" className="flex items-center gap-3 group z-50">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-svMaroon-800 rounded-xl flex items-center justify-center text-white font-bold text-xl md:text-2xl group-hover:bg-svMaroon-900 transition shadow-lg">
-              SV
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl md:text-2xl font-bold text-white tracking-tight leading-none">
-                Sehat<span className="text-svMaroon-400">Vaskular</span>
-              </span>
-              <span className="text-[10px] text-slate-400 font-medium tracking-widest mt-1 uppercase">Edukasi Medis</span>
-            </div>
+{/* LOGO */}
+<Link href="/" className="flex items-center gap-3 group z-50">
+            <img 
+              src="/logo.png" 
+              alt="Logo Sehat Vaskular" 
+              className="h-10 md:h-12 w-auto object-contain group-hover:opacity-90 transition-opacity" 
+              onError={(e) => { e.currentTarget.style.display = 'none' }} // Sembunyikan jika gambar gagal dimuat
+            />
           </Link>
 
           {/* HAMBURGER MOBILE */}
