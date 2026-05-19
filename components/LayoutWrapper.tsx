@@ -201,7 +201,7 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
             <ul className="space-y-3 text-sm">
               <li>Email: admin@sehatvaskular.com</li>
               <li>Telp/WA: 0822-4564-5756</li>
-              <li>Lokasi: Surabaya, Indonesia</li>
+              <li>Lokasi: Malang, Indonesia</li>
             </ul>
           </div>
         </div>
