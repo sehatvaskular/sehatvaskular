@@ -50,13 +50,13 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
       <header className="bg-svBlue-900 sticky top-0 z-50 border-b-4 border-svMaroon-900 shadow-xl">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           
-          {/* LOGO */}
+         
 {/* LOGO */}
 <Link href="/" className="flex items-center gap-3 group z-50">
             <img 
               src="/logo.png" 
               alt="Logo Sehat Vaskular" 
-              className="h-10 md:h-12 w-auto object-contain group-hover:opacity-90 transition-opacity" 
+              className="h-[60px] md:h-[72px] w-auto object-contain group-hover:opacity-90 transition-opacity" 
               onError={(e) => { e.currentTarget.style.display = 'none' }} // Sembunyikan jika gambar gagal dimuat
             />
           </Link>
