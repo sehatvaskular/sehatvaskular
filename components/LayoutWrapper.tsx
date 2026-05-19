@@ -176,7 +176,15 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
       <footer className="bg-svBlue-900 text-slate-400 py-16 border-t border-slate-800 mt-20">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-12">
           <div className="col-span-2">
-            <h2 className="text-2xl font-bold text-white mb-6">Sehat<span className="text-svMaroon-400">Vaskular</span></h2>
+            {/* Logo Footer (Diubah menjadi putih menggunakan CSS Filter) */}
+            <Link href="/" className="inline-block mb-6">
+              <img 
+                src="/logo.png" 
+                alt="Logo Sehat Vaskular Footer" 
+                className="h-10 md:h-12 w-auto object-contain brightness-0 invert opacity-70 hover:opacity-100 transition-opacity" 
+                onError={(e) => { e.currentTarget.style.display = 'none' }}
+              />
+            </Link>
             <p className="text-sm leading-relaxed max-w-md">Platform edukasi dan informasi kesehatan spesialis bedah vaskular & endovaskular terdepan di Indonesia.</p>
           </div>
           <div>
