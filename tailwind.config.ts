@@ -8,7 +8,7 @@ export default {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: { // <-- Pastikan warnanya ada di dalam 'extend' ini
+    extend: {
       colors: {
         svBlue: {
           900: '#0f172a', 
