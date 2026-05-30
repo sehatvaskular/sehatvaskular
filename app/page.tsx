@@ -136,7 +136,7 @@ export default async function Home() {
         <NewsCarousel posts={posts} />
       </FadeIn>
 
-      {/* LAYANAN SECTION */}
+      {/* LAYANAN SECTION (Diperbarui menjadi 6 Layanan) */}
       <section className="py-16 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <FadeIn direction="up">
@@ -145,34 +145,74 @@ export default async function Home() {
               <h3 className="text-3xl md:text-4xl font-bold text-svBlue-900 text-center">Penanganan Medis Vaskular</h3>
             </div>
           </FadeIn>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            {/* Layanan 1 */}
             <FadeIn delay={0.1} direction="up">
+              <Link href="/layanan/akses-cuci-darah" className="block p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:shadow-xl hover:border-svMaroon-900/20 transition group h-full">
+                <div className="w-14 h-14 bg-svMaroon-900/10 text-svMaroon-900 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:bg-svMaroon-800 group-hover:text-white transition">
+                  💉
+                </div>
+                <h4 className="text-xl font-bold text-svBlue-900 mb-3 group-hover:text-svMaroon-800 transition-colors">Akses Cuci Darah</h4>
+                <p className="text-slate-600 leading-relaxed">Pembuatan dan perawatan akses vaskular (Cimino/CDL) untuk kebutuhan hemodialisis pasien.</p>
+              </Link>
+            </FadeIn>
+
+            {/* Layanan 2 */}
+            <FadeIn delay={0.2} direction="up">
               <Link href="/layanan/diabetic-foot" className="block p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:shadow-xl hover:border-svMaroon-900/20 transition group h-full">
                 <div className="w-14 h-14 bg-svMaroon-900/10 text-svMaroon-900 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:bg-svMaroon-800 group-hover:text-white transition">
                   🩸
                 </div>
-                <h4 className="text-xl font-bold text-svBlue-900 mb-3 group-hover:text-svMaroon-800 transition-colors">Diabetic Foot</h4>
-                <p className="text-slate-600 leading-relaxed">Pencegahan amputasi dan perawatan luka kaki diabetes secara komprehensif.</p>
+                <h4 className="text-xl font-bold text-svBlue-900 mb-3 group-hover:text-svMaroon-800 transition-colors">Kaki Diabetes</h4>
+                <p className="text-slate-600 leading-relaxed">Pencegahan amputasi dan perawatan luka kaki diabetes (Diabetic Foot) secara komprehensif.</p>
               </Link>
             </FadeIn>
+
+            {/* Layanan 3 */}
             <FadeIn delay={0.3} direction="up">
               <Link href="/layanan/pad" className="block p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:shadow-xl hover:border-svMaroon-900/20 transition group h-full">
                 <div className="w-14 h-14 bg-svMaroon-900/10 text-svMaroon-900 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:bg-svMaroon-800 group-hover:text-white transition">
                   🫀
                 </div>
-                <h4 className="text-xl font-bold text-svBlue-900 mb-3 group-hover:text-svMaroon-800 transition-colors">Artery Disease</h4>
-                <p className="text-slate-600 leading-relaxed">Penanganan penyumbatan pembuluh darah arteri di area kaki dan tangan.</p>
+                <h4 className="text-xl font-bold text-svBlue-900 mb-3 group-hover:text-svMaroon-800 transition-colors">Penyumbatan Arteri (PAD)</h4>
+                <p className="text-slate-600 leading-relaxed">Penanganan penyumbatan pembuluh darah arteri di area kaki dan tangan untuk melancarkan sirkulasi.</p>
               </Link>
             </FadeIn>
-            <FadeIn delay={0.5} direction="up">
+
+            {/* Layanan 4 */}
+            <FadeIn delay={0.4} direction="up">
               <Link href="/layanan/varises" className="block p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:shadow-xl hover:border-svMaroon-900/20 transition group h-full">
                 <div className="w-14 h-14 bg-svMaroon-900/10 text-svMaroon-900 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:bg-svMaroon-800 group-hover:text-white transition">
                   🩺
                 </div>
-                <h4 className="text-xl font-bold text-svBlue-900 mb-3 group-hover:text-svMaroon-800 transition-colors">Varises & Vena</h4>
-                <p className="text-slate-600 leading-relaxed">Tindakan laser dan pembedahan kosmetik untuk varises dan gangguan vena.</p>
+                <h4 className="text-xl font-bold text-svBlue-900 mb-3 group-hover:text-svMaroon-800 transition-colors">Varises & Vena (CVI)</h4>
+                <p className="text-slate-600 leading-relaxed">Tindakan medis minimal invasif, laser, dan pembedahan kosmetik untuk varises dan gangguan vena.</p>
               </Link>
             </FadeIn>
+
+            {/* Layanan 5 */}
+            <FadeIn delay={0.5} direction="up">
+              <Link href="/layanan/dvt" className="block p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:shadow-xl hover:border-svMaroon-900/20 transition group h-full">
+                <div className="w-14 h-14 bg-svMaroon-900/10 text-svMaroon-900 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:bg-svMaroon-800 group-hover:text-white transition">
+                  🦵
+                </div>
+                <h4 className="text-xl font-bold text-svBlue-900 mb-3 group-hover:text-svMaroon-800 transition-colors">Trombosis Vena (DVT)</h4>
+                <p className="text-slate-600 leading-relaxed">Penanganan gumpalan darah pada vena dalam (Deep Vein Thrombosis) yang membahayakan aliran darah.</p>
+              </Link>
+            </FadeIn>
+
+            {/* Layanan 6 */}
+            <FadeIn delay={0.6} direction="up">
+              <Link href="/layanan/aneurisma" className="block p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:shadow-xl hover:border-svMaroon-900/20 transition group h-full">
+                <div className="w-14 h-14 bg-svMaroon-900/10 text-svMaroon-900 rounded-2xl flex items-center justify-center text-2xl mb-6 group-hover:bg-svMaroon-800 group-hover:text-white transition">
+                  ❤️‍🩹
+                </div>
+                <h4 className="text-xl font-bold text-svBlue-900 mb-3 group-hover:text-svMaroon-800 transition-colors">Aneurisma Aorta</h4>
+                <p className="text-slate-600 leading-relaxed">Deteksi dini dan intervensi pelebaran pembuluh darah aorta untuk mencegah risiko fatal (ruptur/pecah).</p>
+              </Link>
+            </FadeIn>
+
           </div>
         </div>
       </section>
@@ -242,8 +282,8 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto px-6">
           <FadeIn direction="up">
             <div className="text-center mb-16">
-              <h2 className="text-sm font-bold text-svMaroon-800 tracking-widest uppercase mb-3 text-center">Literasi Vaskular</h2>
-              <h3 className="text-3xl md:text-4xl font-bold text-svBlue-900 text-center">Bacaan Pilihan Kami</h3>
+              <h2 className="text-sm font-bold text-svMaroon-800 tracking-widest uppercase mb-3 text-center">Edukasi Vaskular</h2>
+              <h3 className="text-3xl md:text-4xl font-bold text-svBlue-900 text-center">Artikel Kami</h3>
             </div>
           </FadeIn>
 
