@@ -1,17 +1,17 @@
+// app/page.tsx
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import FadeIn from '@/components/FadeIn'
+import NewsCarousel from '@/components/NewsCarousel' // <-- Mengimpor Slideshow
 
 export const revalidate = 60
 
-// 1. Definisikan tipe data untuk menghindari penggunaan 'any'
 interface Partner {
   id: number;
   name: string;
   logo_url: string;
 }
 
-// 2. DATA DUMMY BACKUP UNTUK DOKTER
 const dummyDoctors = [
   {
     id: 1,
@@ -36,7 +36,6 @@ const dummyDoctors = [
   }
 ]
 
-// 3. DATA DUMMY BACKUP UNTUK ARTIKEL
 const dummyPosts = [
   {
     slug: 'mengenal-peripheral-artery-disease',
@@ -61,7 +60,6 @@ const dummyPosts = [
   }
 ]
 
-// 4. DATA DUMMY BACKUP UNTUK PARTNER/KOLABORASI
 const dummyPartners: Partner[] = [
   { id: 1, name: 'RS IHC Lavalette', logo_url: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Pertamedika_IHC_Logo.png' },
   { id: 2, name: 'RSSA Malang', logo_url: 'https://via.placeholder.com/300x150/ffffff/0f172a?text=RSSA+Malang' },
@@ -73,7 +71,8 @@ const dummyPartners: Partner[] = [
 ]
 
 export default async function Home() {
-  const { data: dbPosts } = await supabase.from('posts').select('title, slug, excerpt, published_at, image_url').order('published_at', { ascending: false }).limit(3)
+  // Ambil 5 artikel terbaru untuk memenuhi isi slideshow
+  const { data: dbPosts } = await supabase.from('posts').select('title, slug, excerpt, published_at, image_url').order('published_at', { ascending: false }).limit(5)
   const { data: dbDoctors } = await supabase.from('doctors').select('*').order('display_order', { ascending: true })
   
   let dbPartners = null;
@@ -93,14 +92,14 @@ export default async function Home() {
 
   return (
     <>
-      {/* HERO SECTION */}
-      <section className="relative h-[85vh] bg-svBlue-900 flex items-center overflow-hidden">
+      {/* HERO SECTION - Ditambahkan padding bawah ekstra agar teks tidak tertutup slideshow */}
+      <section className="relative h-[95vh] bg-svBlue-900 flex items-center overflow-hidden pb-32">
         <div className="absolute inset-0 z-0">
           <img src={heroImg} alt="Vascular Surgery" className="w-full h-full object-cover opacity-20 mix-blend-overlay" />
           <div className="absolute inset-0 bg-linear-to-r from-svBlue-900 via-svBlue-900/80 to-transparent"></div>
         </div>
         
-        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full mt-[-10vh]">
           <div className="max-w-2xl">
             <FadeIn delay={0.1} direction="up">
               <span className="inline-block py-1 px-3 rounded-full bg-svMaroon-900/40 border border-svMaroon-600 text-red-200 text-sm font-semibold tracking-wider mb-6">
@@ -132,8 +131,13 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* HIGHLIGHT NEWS SLIDESHOW SECTION */}
+      <FadeIn delay={0.4} direction="up">
+        <NewsCarousel posts={posts} />
+      </FadeIn>
+
       {/* LAYANAN SECTION */}
-      <section className="py-24 bg-white overflow-hidden">
+      <section className="py-16 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <FadeIn direction="up">
             <div className="text-center max-w-3xl mx-auto mb-16">
@@ -233,18 +237,18 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ARTIKEL SECTION */}
+      {/* ARTIKEL LAMA DI BAGIAN BAWAH (Tetap Dipertahankan 3 Saja) */}
       <section className="py-24 bg-slate-50 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <FadeIn direction="up">
             <div className="text-center mb-16">
               <h2 className="text-sm font-bold text-svMaroon-800 tracking-widest uppercase mb-3 text-center">Literasi Vaskular</h2>
-              <h3 className="text-3xl md:text-4xl font-bold text-svBlue-900 text-center">Artikel Edukasi Terbaru</h3>
+              <h3 className="text-3xl md:text-4xl font-bold text-svBlue-900 text-center">Bacaan Pilihan Kami</h3>
             </div>
           </FadeIn>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {posts.map((post, index) => (
+            {posts.slice(0, 3).map((post, index) => (
               <FadeIn key={post.slug} delay={0.2 * (index + 1)} direction="up">
                 <article className="group cursor-pointer bg-white rounded-3xl p-4 border border-slate-100 hover:shadow-xl transition h-full flex flex-col">
                   <Link href={`/artikel/${post.slug}`} className="block h-48 rounded-2xl bg-slate-200 mb-6 overflow-hidden relative">
@@ -273,6 +277,12 @@ export default async function Home() {
                 </article>
               </FadeIn>
             ))}
+          </div>
+          
+          <div className="mt-12 text-center">
+             <Link href="/artikel" className="inline-block px-8 py-3 bg-svBlue-900 text-white font-medium rounded-full hover:bg-svBlue-800 transition">
+               Lihat Semua Artikel
+             </Link>
           </div>
         </div>
       </section>
