@@ -1,15 +1,16 @@
-import type { Metadata } from 'next' // <-- Perbaikan: Wajib mengimpor tipe Metadata agar tidak error
-import { Plus_Jakarta_Sans } from 'next/font/google' // <-- Tambahan: Menggunakan font modern agar website lebih rapi
+import type { Metadata } from 'next'
+import { Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import LayoutWrapper from '@/components/LayoutWrapper'
 
 // Konfigurasi font Plus Jakarta Sans
 const jakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  variable: '--font-sans',
+  weight: ['400', '500', '600', '700', '800'],
+  display: 'swap',
 })
 
-// OPTIMASI SEO GLOBAL UNTUK MENGUSIR JEJAK JUDOL
+// OPTIMASI SEO GLOBAL & VERIFIKASI LOGO SITES
 export const metadata: Metadata = {
   metadataBase: new URL('https://sehatvaskular.com'), 
   title: {
@@ -21,6 +22,16 @@ export const metadata: Metadata = {
   authors: [{ name: 'Tim Dokter Sehat Vaskular' }],
   creator: 'Sehat Vaskular',
   publisher: 'Sehat Vaskular',
+  
+  // Konfigurasi Favicon / Logo Tab & Google Search Icon
+  icons: {
+    icon: [
+      { url: '/logoICO.png', type: 'image/png' },
+    ],
+    shortcut: '/logoICO.png',
+    apple: '/logoICO.png',
+  },
+
   openGraph: {
     title: 'Sehat Vaskular | Edukasi Kesehatan Pembuluh Darah',
     description: 'Platform edukasi kesehatan spesialis bedah vaskular & endovaskular terpercaya di Indonesia.',
@@ -41,8 +52,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={`scroll-smooth ${jakartaSans.variable}`}>
-      <body className="bg-slate-50 text-slate-800 font-sans antialiased flex flex-col min-h-screen">
+    <html lang="id" className="scroll-smooth">
+      <body className={`${jakartaSans.className} bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen`}>
         <LayoutWrapper>
           {children}
         </LayoutWrapper>
