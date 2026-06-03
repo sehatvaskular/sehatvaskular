@@ -1,9 +1,11 @@
+// app/api/chat/route.ts
+
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { NextResponse } from 'next/server'
 
-export const runtime = 'edge';
+// ✅ HAPUS runtime edge — tidak kompatibel dengan @google/generative-ai
+// export const runtime = 'edge';  <-- DIHAPUS
 
-// Definisikan struktur data history agar TypeScript tidak error
 interface ChatMessage {
   role: string;
   content: string;
@@ -17,7 +19,9 @@ export async function POST(req: Request) {
     const genAI = new GoogleGenerativeAI(apiKey)
     const { message, history, userName } = await req.json()
 
-    // DOKTRIN BARU: Kenalkan AI dengan nama pasien & aturan Handoff WA
+    // ✅ Guard: pastikan history selalu array
+    const safeHistory: ChatMessage[] = Array.isArray(history) ? history : []
+
     const systemPrompt = `Kamu adalah Asisten AI dari "Sehat Vaskular", platform edukasi bedah vaskular di Indonesia.
     Pengguna yang sedang berkonsultasi denganmu saat ini bernama: ${userName}.
     
@@ -37,20 +41,27 @@ export async function POST(req: Request) {
       systemInstruction: systemPrompt,
     })
 
-    // Gunakan ChatMessage pengganti any
-    const formattedHistory = history.map((msg: ChatMessage) => ({
-      role: msg.role === 'user' ? 'user' : 'model',
-      parts: [{ text: msg.content }]
-    }))
+    // ✅ Filter history: skip pesan pertama jika role-nya 'model' (Gemini tidak terima history diawali model)
+    const formattedHistory = safeHistory
+      .map((msg: ChatMessage) => ({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.content }]
+      }))
+      .filter((_, index, arr) => {
+        // Hapus leading 'model' messages
+        if (index === 0 && arr[0].role === 'model') return false
+        return true
+      })
 
     const chat = model.startChat({ history: formattedHistory })
     const result = await chat.sendMessage(message)
     const responseText = result.response.text()
 
     return NextResponse.json({ reply: responseText })
+
   } catch (error: unknown) {
-    // Penanganan error tanpa menggunakan any
     const errorMessage = error instanceof Error ? error.message : 'Terjadi kesalahan pada server'
+    console.error('[Chat API Error]', errorMessage) // ✅ Log untuk debugging
     return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }
