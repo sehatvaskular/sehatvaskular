@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { use } from 'react' 
 import Swal from 'sweetalert2'
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export default function EditDokter({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params)

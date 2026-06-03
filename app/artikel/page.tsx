@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import FadeIn from '@/components/FadeIn'
 
-export const runtime = 'edge'; // Wajib untuk Cloudflare
+export const runtime = 'nodejs'; // Wajib untuk Cloudflare
 export const revalidate = 60;
 
 export default async function DaftarArtikel() {

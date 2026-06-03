@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import FadeIn from '@/components/FadeIn'
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 // 1. Definisikan Interface untuk Data Layanan
 interface Highlight {
