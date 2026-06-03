@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     [HANDOFF_WA: Pasien memiliki luka diabetes di kaki yang menghitam, ingin menanyakan jadwal dokter dan perkiraan biaya perawatan luka.]`
 
     const model = genAI.getGenerativeModel({
-      model: 'gemini-3-flash-preview',
+      model: 'gemini-2.0-flash-lite',
       systemInstruction: systemPrompt,
     })
 
