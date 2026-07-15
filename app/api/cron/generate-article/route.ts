@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
 // 1. Matikan Edge Runtime di Netlify karena sering bermasalah dengan request panjang
-//export const runtime = 'nodejs';
+//export const runtime = 'edge';;
 
 // 2. Minta hosting (Netlify/Vercel) untuk memperpanjang batas waktu eksekusi (maksimal 60 detik)
 export const maxDuration = 60; 

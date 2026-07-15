@@ -3,7 +3,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 
-export const runtime = 'nodejs';
+export const runtime = 'edge';;
 
 interface Props {
   params: Promise<{ slug: string }>

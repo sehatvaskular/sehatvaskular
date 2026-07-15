@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import FadeIn from '@/components/FadeIn'
 
-export const runtime = 'nodejs'
+export const runtime = 'edge';
 
 // DATA BACKUP/FALLBACK JIKA DATA DI SUPABASE BELUM DIUPDATE LENGKAP
 const doctorsBackupData: Record<string, any> = {

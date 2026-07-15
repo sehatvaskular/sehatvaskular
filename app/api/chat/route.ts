@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 import { NextResponse } from 'next/server'
 
 // ✅ WAJIB untuk Vercel: paksa Node.js runtime agar @google/generative-ai bisa berjalan
-export const runtime = 'nodejs'
+export const runtime = 'edge';
 
 // ✅ Timeout maksimal 30 detik (Vercel Pro: 60s, Free: 10s — sesuaikan jika perlu)
 export const maxDuration = 30
